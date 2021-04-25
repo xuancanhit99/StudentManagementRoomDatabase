@@ -13,24 +13,10 @@ public class Student implements Serializable {
     private byte[] stu_avt;
     private String stu_phone;
 
-    public Student() {
-    }
+    public Student() {}
 
     public Student(int stu_id, String stu_name, String stu_no, String stu_email, int stu_gender,
                    String stu_dob, String stu_class, byte[] stu_avt, String stu_phone) {
-        this.stu_id = stu_id;
-        this.stu_name = stu_name;
-        this.stu_no = stu_no;
-        this.stu_email = stu_email;
-        this.stu_gender = stu_gender;
-        this.stu_dob = stu_dob;
-        this.stu_class = stu_class;
-        this.stu_avt = stu_avt;
-        this.stu_phone = stu_phone;
-    }
-
-    public Student(int stu_id, String stu_name, String stu_no, String stu_email, int stu_gender,
-                   String stu_dob, String stu_class, String stu_phone) {
         this.stu_id = stu_id;
         this.stu_name = stu_name;
         this.stu_no = stu_no;

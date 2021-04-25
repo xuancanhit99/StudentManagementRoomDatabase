@@ -24,7 +24,6 @@ public class ViewAllActivity extends AppCompatActivity {
     final String DATABASE_NAME = "stuDB.db";
     SQLiteDatabase database;
 
-    //
     private RecyclerView rvItems;
     private ArrayList<Student> studentArrayList;
     private StudentAdapter studentAdapter;
@@ -33,46 +32,16 @@ public class ViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
 
-
         addControls();
         readData();
-
-//        //Test
-//        //Data
-//        studentArrayList = new ArrayList<Student>();
-//        Student st1 = new Student(1, "Xuan Canh", "L10", "xuancanhit99@gmail.com", 1, "14-09-1999", "IKBO-07-19", "89858944005");
-//        studentArrayList.add(st1);
-//        Student st2 = new Student(2, "Xuan Canh 1", "L11", "xqwet99@gmail.com", 0, "11-09-1999", "IKBO-07-20", "898123124005");
-//        studentArrayList.add(st2);
-//        Student st3 = new Student(3, "Xuan Canh 2", "L12", "xuadsd@gmail.com", 1, "14-12-1999", "IKBO-04-19", "89858123015");
-//        studentArrayList.add(st3);
-//        Student st4 = new Student(4, "Xuan Canh 3", "L13", "qwenhit99@gmail.com", 1, "14-09-1987", "IKBO-05-19", "89851234005");
-//        studentArrayList.add(st4);
-//        Student st5 = new Student(5, "Xuan Canh 4", "L14", "xuancanee@gmail.com", 0, "14-01-2000", "IKBO-01-18", "89851234005");
-//        studentArrayList.add(st5);
-//
-//        //Anh xa
-//        rvItems = (RecyclerView)findViewById(R.id.rv_items);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-//        rvItems.setLayoutManager(layoutManager);
-//        rvItems.setHasFixedSize(true);
-//
-//
-//        //
-//        studentAdapter = new StudentAdapter(getApplicationContext(),studentArrayList);
-//        rvItems.setAdapter(studentAdapter);
     }
-
-
 
     private void addControls() {
         studentArrayList = new ArrayList<Student>();
-
         rvItems = (RecyclerView)findViewById(R.id.rv_items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(layoutManager);
         rvItems.setHasFixedSize(true);
-
         studentAdapter = new StudentAdapter(getApplicationContext(),studentArrayList); // this
         rvItems.setAdapter(studentAdapter);
     }
@@ -98,5 +67,4 @@ public class ViewAllActivity extends AppCompatActivity {
         }
         studentAdapter.notifyDataSetChanged();
     }
-
 }

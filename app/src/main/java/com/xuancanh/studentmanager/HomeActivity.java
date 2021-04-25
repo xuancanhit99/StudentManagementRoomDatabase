@@ -13,13 +13,7 @@ import android.widget.Toast;
 import com.xuancanh.studentmanager.database.Database;
 
 public class HomeActivity extends AppCompatActivity {
-
-
-
-
-    //
     Button addStudent, viewStudent, exitApp;
-
 
     // initviews
     public void initviews() {
@@ -28,14 +22,10 @@ public class HomeActivity extends AppCompatActivity {
         viewStudent = findViewById(R.id.btn_student_view_all);
     }
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
         // Call initviews
         initviews();
@@ -63,6 +53,5 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this, AddActivity.class));
             }
         });
-
     }
 }

@@ -9,7 +9,7 @@
         android:id="@+id/iv_stu_avt"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:src="@drawable/male"/>
+        android:src="@drawable/graduated"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"

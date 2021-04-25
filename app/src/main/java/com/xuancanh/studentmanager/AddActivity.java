@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class AddActivity extends AppCompatActivity {
-
     final String DATABASE_NAME = "stuDB.db";
     final int REQUEST_TAKE_PHOTO = 123;
     final int REQUEST_CHOOSE_PHOTO = 321;
@@ -104,7 +104,6 @@ public class AddActivity extends AppCompatActivity {
         edtStuAddPhone = (EditText) findViewById(R.id.edt_stu_add_phone);
         edtStuAddEmail = (EditText) findViewById(R.id.edt_stu_add_email);
         edtStuAddClass = (EditText) findViewById(R.id.edt_stu_add_class);
-
         rgStuAddGender = (RadioGroup) findViewById(R.id.rg_stu_add_gender);
         rbStuAddFemale = (RadioButton) findViewById(R.id.rb_stu_add_female);
         rbStuAddMale = (RadioButton) findViewById(R.id.rb_stu_add_male);
@@ -164,7 +163,22 @@ public class AddActivity extends AppCompatActivity {
         student.setStu_email(edtStuAddEmail.getText().toString());
         student.setStu_class(edtStuAddClass.getText().toString());
         student.setStu_gender(addGender);
-        student.setStu_avt(getByteArrayFromImageView(ivStuAddAvt));
+
+        //Compare imageView with image
+        final ImageView imageViewAvt = (ImageView) findViewById(R.id.iv_stu_add_avt);
+        final Bitmap bitmap = ((BitmapDrawable)imageViewAvt.getDrawable()).getBitmap();
+        Drawable myDrawableFemale = getResources().getDrawable(R.drawable.female);
+        Drawable myDrawableMale = getResources().getDrawable(R.drawable.male);
+        Drawable myDrawableGraduated = getResources().getDrawable(R.drawable.graduated);
+        final Bitmap myPhotoDefaultFemale = ((BitmapDrawable) myDrawableFemale).getBitmap();
+        final Bitmap myPhotoDefaultMale = ((BitmapDrawable) myDrawableMale).getBitmap();
+        final Bitmap myPhotoDefaultGraduated = ((BitmapDrawable) myDrawableGraduated).getBitmap();
+        if(bitmap.sameAs(myPhotoDefaultFemale) || bitmap.sameAs(myPhotoDefaultMale) || bitmap.sameAs(myPhotoDefaultGraduated)) {
+            student.setStu_avt(null);
+        }
+        else {
+            student.setStu_avt(getByteArrayFromImageView(ivStuAddAvt));
+        }
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("StudentName", student.getStu_name());
@@ -179,7 +193,7 @@ public class AddActivity extends AppCompatActivity {
         SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
         database.insert("students", null, contentValues);
 
-        //finish();
+        //After added student move to list
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }

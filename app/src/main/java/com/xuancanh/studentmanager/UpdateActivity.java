@@ -1,17 +1,13 @@
 package com.xuancanh.studentmanager;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,21 +19,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.xuancanh.studentmanager.adapter.StudentAdapter;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.xuancanh.studentmanager.database.Database;
 import com.xuancanh.studentmanager.model.Student;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 public class UpdateActivity extends AppCompatActivity {
-
     final String DATABASE_NAME = "stuDB.db";
     final int REQUEST_TAKE_PHOTO = 123;
     final int REQUEST_CHOOSE_PHOTO = 321;
-
 
     //Anh xa
     private EditText edtStuUpdateName, edtStuUpdateNo, edtStuUpdateDOB, edtStuUpdatePhone, edtStuUpdateEmail, edtStuUpdateClass;
@@ -55,7 +51,6 @@ public class UpdateActivity extends AppCompatActivity {
         //Get data from key STUDENT_DATA push to student
         Intent intent = getIntent();
         Student student = (Student) intent.getSerializableExtra("STUDENT_DATA");
-
 
         //Anh xa
         initUI();
@@ -92,7 +87,7 @@ public class UpdateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 update(student);
-                Toast.makeText(UpdateActivity.this,"Saved Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateActivity.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -103,7 +98,7 @@ public class UpdateActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
                 builder.setIcon(R.drawable.ic_baseline_delete_24);
                 builder.setTitle("Delete Student");
-                builder.setMessage("Are you sure delete student " + student.getStu_name()+"?");
+                builder.setMessage("Are you sure delete student " + student.getStu_name() + "?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -125,10 +120,9 @@ public class UpdateActivity extends AppCompatActivity {
         rgStuUpdateGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.rb_stu_update_male) {
+                if (checkedId == R.id.rb_stu_update_male) {
                     updateGender = 1;
-                }
-                else {
+                } else {
                     updateGender = 0;
                 }
             }
@@ -137,7 +131,7 @@ public class UpdateActivity extends AppCompatActivity {
 
     private void delete(Student student) {
         SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        database.delete("students", "StudentId = ?", new String[] {student.getStu_id() + ""});
+        database.delete("students", "StudentId = ?", new String[]{student.getStu_id() + ""});
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }
@@ -153,25 +147,21 @@ public class UpdateActivity extends AppCompatActivity {
         if (student.getStu_gender() == 1) {
             rbStuUpdateMale.setChecked(true);
             updateGender = 1;
-        }
-        else {
+        } else {
             rbStuUpdateFemale.setChecked(true);
             updateGender = 0;
         }
 
         //Show ImageView
-        if(student.getStu_avt() != null) {
-            Bitmap bmAvt = BitmapFactory.decodeByteArray(student.getStu_avt(), 0,student.getStu_avt().length);
+        if (student.getStu_avt() != null) {
+            Bitmap bmAvt = BitmapFactory.decodeByteArray(student.getStu_avt(), 0, student.getStu_avt().length);
             ivStuUpdateAvt.setImageBitmap(bmAvt);
-        }
-        else {
-            if(student.getStu_gender() == 1) {
+        } else {
+            if (student.getStu_gender() == 1) {
                 ivStuUpdateAvt.setImageResource(R.drawable.male);
-            }
-            else if(student.getStu_gender() == 0) {
+            } else if (student.getStu_gender() == 0) {
                 ivStuUpdateAvt.setImageResource(R.drawable.female);
-            }
-            else {
+            } else {
                 ivStuUpdateAvt.setImageResource(R.drawable.graduated);
             }
         }
@@ -184,7 +174,6 @@ public class UpdateActivity extends AppCompatActivity {
         edtStuUpdatePhone = (EditText) findViewById(R.id.edt_stu_update_phone);
         edtStuUpdateEmail = (EditText) findViewById(R.id.edt_stu_update_email);
         edtStuUpdateClass = (EditText) findViewById(R.id.edt_stu_update_class);
-
         rgStuUpdateGender = (RadioGroup) findViewById(R.id.rg_stu_update_gender);
         rbStuUpdateFemale = (RadioButton) findViewById(R.id.rb_stu_update_female);
         rbStuUpdateMale = (RadioButton) findViewById(R.id.rb_stu_update_male);
@@ -210,8 +199,8 @@ public class UpdateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
-            if(requestCode == REQUEST_CHOOSE_PHOTO) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CHOOSE_PHOTO) {
                 try {
                     Uri imageUri = data.getData();
                     InputStream is = getContentResolver().openInputStream(imageUri);
@@ -220,16 +209,16 @@ public class UpdateActivity extends AppCompatActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-            }
-            else if(requestCode == REQUEST_TAKE_PHOTO) {
-                Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            } else if (requestCode == REQUEST_TAKE_PHOTO) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 ivStuUpdateAvt.setImageBitmap(bitmap);
             }
         }
+
     }
 
     private byte[] getByteArrayFromImageView(ImageView imageView) {
-        BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
+        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -246,7 +235,22 @@ public class UpdateActivity extends AppCompatActivity {
         student.setStu_email(edtStuUpdateEmail.getText().toString());
         student.setStu_class(edtStuUpdateClass.getText().toString());
         student.setStu_gender(updateGender);
-        student.setStu_avt(getByteArrayFromImageView(ivStuUpdateAvt));
+
+
+        //Compare imageView with image
+        final ImageView imageViewAvt = (ImageView) findViewById(R.id.iv_stu_update_avt);
+        final Bitmap bitmap = ((BitmapDrawable) imageViewAvt.getDrawable()).getBitmap();
+        Drawable myDrawableFemale = getResources().getDrawable(R.drawable.female);
+        Drawable myDrawableMale = getResources().getDrawable(R.drawable.male);
+        Drawable myDrawableGraduated = getResources().getDrawable(R.drawable.graduated);
+        final Bitmap myPhotoDefaultFemale = ((BitmapDrawable) myDrawableFemale).getBitmap();
+        final Bitmap myPhotoDefaultMale = ((BitmapDrawable) myDrawableMale).getBitmap();
+        final Bitmap myPhotoDefaultGraduated = ((BitmapDrawable) myDrawableGraduated).getBitmap();
+        if (bitmap.sameAs(myPhotoDefaultFemale) || bitmap.sameAs(myPhotoDefaultMale) || bitmap.sameAs(myPhotoDefaultGraduated)) {
+            student.setStu_avt(null);
+        } else {
+            student.setStu_avt(getByteArrayFromImageView(ivStuUpdateAvt));
+        }
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("StudentName", student.getStu_name());
@@ -259,9 +263,8 @@ public class UpdateActivity extends AppCompatActivity {
         contentValues.put("StudentPhone", student.getStu_phone());
 
         SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        database.update("students", contentValues, "StudentId = ?", new String[] {student.getStu_id() + ""});
+        database.update("students", contentValues, "StudentId = ?", new String[]{student.getStu_id() + ""});
 
-        //finish();
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }
