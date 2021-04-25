@@ -1,10 +1,13 @@
 package com.xuancanh.studentmanager;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,12 +23,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.xuancanh.studentmanager.adapter.StudentAdapter;
 import com.xuancanh.studentmanager.database.Database;
 import com.xuancanh.studentmanager.model.Student;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class UpdateActivity extends AppCompatActivity {
 
@@ -33,11 +38,12 @@ public class UpdateActivity extends AppCompatActivity {
     final int REQUEST_TAKE_PHOTO = 123;
     final int REQUEST_CHOOSE_PHOTO = 321;
 
+
     //Anh xa
     private EditText edtStuUpdateName, edtStuUpdateNo, edtStuUpdateDOB, edtStuUpdatePhone, edtStuUpdateEmail, edtStuUpdateClass;
     private RadioGroup rgStuUpdateGender;
     private RadioButton rbStuUpdateMale, rbStuUpdateFemale;
-    private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto;
+    private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateDelete, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto;
     private ImageView ivStuUpdateAvt;
     int updateGender;
 
@@ -49,6 +55,7 @@ public class UpdateActivity extends AppCompatActivity {
         //Get data from key STUDENT_DATA push to student
         Intent intent = getIntent();
         Student student = (Student) intent.getSerializableExtra("STUDENT_DATA");
+
 
         //Anh xa
         initUI();
@@ -89,6 +96,31 @@ public class UpdateActivity extends AppCompatActivity {
             }
         });
 
+        //Button Delete
+        btnStuUpdateDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
+                builder.setIcon(R.drawable.ic_baseline_delete_24);
+                builder.setTitle("Delete Student");
+                builder.setMessage("Are you sure delete student " + student.getStu_name()+"?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        delete(student);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
         //RadioGroup Gender
         rgStuUpdateGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -101,6 +133,13 @@ public class UpdateActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void delete(Student student) {
+        SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
+        database.delete("students", "StudentId = ?", new String[] {student.getStu_id() + ""});
+        Intent intent = new Intent(this, ViewAllActivity.class);
+        startActivity(intent);
     }
 
     private void pushDataToView(Student student) {
@@ -151,6 +190,7 @@ public class UpdateActivity extends AppCompatActivity {
         rbStuUpdateMale = (RadioButton) findViewById(R.id.rb_stu_update_male);
         btnStuUpdateSave = (Button) findViewById(R.id.btn_stu_update_save);
         btnStuUpdateExit = (Button) findViewById(R.id.btn_stu_update_exit);
+        btnStuUpdateDelete = (Button) findViewById(R.id.btn_stu_update_delete);
         btnStuUpdateTakePhoto = (Button) findViewById(R.id.btn_stu_update_take_photo);
         btnStuUpdateChoosePhoto = (Button) findViewById(R.id.btn_stu_update_choose_photo);
         ivStuUpdateAvt = (ImageView) findViewById(R.id.iv_stu_update_avt);

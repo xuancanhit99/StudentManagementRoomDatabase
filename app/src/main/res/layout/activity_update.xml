@@ -205,6 +205,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Button
+            android:id="@+id/btn_stu_update_delete"
+            android:layout_marginHorizontal="10dp"
+            android:text="Delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
             android:id="@+id/btn_stu_update_exit"
             android:layout_marginHorizontal="10dp"
             android:text="Exit"

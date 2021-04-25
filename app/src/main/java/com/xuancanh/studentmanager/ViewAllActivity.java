@@ -75,9 +75,6 @@ public class ViewAllActivity extends AppCompatActivity {
 
         studentAdapter = new StudentAdapter(getApplicationContext(),studentArrayList); // this
         rvItems.setAdapter(studentAdapter);
-
-
-
     }
 
     private void readData() {
