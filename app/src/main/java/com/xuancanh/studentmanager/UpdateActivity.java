@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +30,8 @@ import com.xuancanh.studentmanager.model.Student;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UpdateActivity extends AppCompatActivity {
     final String DATABASE_NAME = "stuDB.db";
@@ -86,8 +89,26 @@ public class UpdateActivity extends AppCompatActivity {
         btnStuUpdateSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                update(student);
-                Toast.makeText(UpdateActivity.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+
+                if(isEmptyEditText(edtStuUpdateName) && isEmptyEditText(edtStuUpdateNo)) {
+                    edtStuUpdateNo.setError("Please enter student's №");
+                    edtStuUpdateName.setError("Please enter student's name");
+                }
+                else if(isEmptyEditText(edtStuUpdateNo)) {
+                    edtStuUpdateNo.setError("Please enter student's №");
+                }
+                else if(isEmptyEditText(edtStuUpdateName)) {
+                    edtStuUpdateName.setError("Please enter student's name");
+                }
+                else {
+                    if(isEmailValid(edtStuUpdateEmail)) {
+                        update(student);
+                        Toast.makeText(UpdateActivity.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        edtStuUpdateEmail.setError("Email address not valid");
+                    }
+                }
             }
         });
 
@@ -214,7 +235,6 @@ public class UpdateActivity extends AppCompatActivity {
                 ivStuUpdateAvt.setImageBitmap(bitmap);
             }
         }
-
     }
 
     private byte[] getByteArrayFromImageView(ImageView imageView) {
@@ -228,6 +248,7 @@ public class UpdateActivity extends AppCompatActivity {
 
     //Update to database
     private void update(Student student) {
+
         student.setStu_name(edtStuUpdateName.getText().toString());
         student.setStu_no(edtStuUpdateNo.getText().toString());
         student.setStu_dob(edtStuUpdateDOB.getText().toString());
@@ -267,5 +288,23 @@ public class UpdateActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private boolean isEmptyEditText(EditText editText) {
+        String str = editText.getText().toString();
+        if(TextUtils.isEmpty(str)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isEmailValid(EditText editText) {
+        String email = editText.getText().toString();
+        if(email.equals("")) return true;
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]+$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

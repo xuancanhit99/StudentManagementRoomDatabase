@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import com.xuancanh.studentmanager.model.Student;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddActivity extends AppCompatActivity {
     final String DATABASE_NAME = "stuDB.db";
@@ -79,8 +82,25 @@ public class AddActivity extends AppCompatActivity {
         btnStuAddSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insert(student);
-                Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
+                if(isEmptyEditText(edtStuAddName) && isEmptyEditText(edtStuAddNo)) {
+                    edtStuAddNo.setError("Please enter student's №");
+                    edtStuAddName.setError("Please enter student's name");
+                }
+                else if(isEmptyEditText(edtStuAddNo)) {
+                    edtStuAddNo.setError("Please enter student's №");
+                }
+                else if(isEmptyEditText(edtStuAddName)) {
+                    edtStuAddName.setError("Please enter student's name");
+                }
+                else {
+                    if(isEmailValid(edtStuAddEmail)) {
+                        insert(student);
+                        Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        edtStuAddEmail.setError("Email address not valid");
+                    }
+                }
             }
         });
 
@@ -197,5 +217,20 @@ public class AddActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private boolean isEmptyEditText(EditText editText) {
+        String str = editText.getText().toString();
+        if(TextUtils.isEmpty(str)) {
+            return true;
+        }
+        return false;
+    }
 
+    public static boolean isEmailValid(EditText editText) {
+        String email = editText.getText().toString();
+        if(email.equals("")) return true;
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]+$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 }

@@ -1,5 +1,6 @@
 package com.xuancanh.studentmanager.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -78,6 +79,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataView
                     Intent intent = new Intent(view.getContext(), UpdateActivity.class);
                     intent.putExtra("STUDENT_DATA", student);
                     view.getContext().startActivity(intent);
+                    ((Activity)view.getContext()).finish();
                 }
             }
         });
