@@ -4,90 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorGrey"
+    android:orientation="vertical"
     tools:context=".HomeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:gravity="center"
-        android:background="@color/colorPrimaryDark2">
+        android:background="@color/colorPrimaryDark2"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Student Manager"
+            android:textColor="@color/colorWhite"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorWhite">
+            android:textStyle="bold" />
 
-        </TextView>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="2dp">
+        app:cardCornerRadius="2dp"
+        app:cardElevation="4dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/btn_student_add"
                 android:layout_width="190dp"
                 android:layout_height="65dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="Add Student"
-                android:textColor="@color/colorWhite"
                 android:background="@color/colorPrimaryDark2"
-                android:textSize="18sp"
                 android:drawableStart="@drawable/ic_baseline_person_add_24"
                 android:drawableLeft="@drawable/ic_baseline_person_add_24"
-                android:drawableTint="@color/colorWhite"
                 android:drawablePadding="10dp"
-                android:textStyle="bold"
-                android:paddingLeft="10dp">
+                android:drawableTint="@color/colorWhite"
+                android:paddingLeft="10dp"
+                android:text="Add Student"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold">
 
             </Button>
+
             <Button
                 android:id="@+id/btn_student_view_all"
                 android:layout_width="190dp"
                 android:layout_height="65dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="View ALL"
-                android:textColor="@color/colorWhite"
                 android:background="@color/colorPrimaryDark2"
-                android:textSize="18sp"
                 android:drawableStart="@drawable/ic_baseline_format_list_bulleted_24"
                 android:drawableLeft="@drawable/ic_baseline_format_list_bulleted_24"
-                android:drawableTint="@color/colorWhite"
                 android:drawablePadding="10dp"
-                android:textStyle="bold"
-                android:paddingLeft="10dp">
+                android:drawableTint="@color/colorWhite"
+                android:paddingLeft="10dp"
+                android:text="View ALL"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold">
 
             </Button>
+
             <Button
                 android:id="@+id/btn_app_exit"
                 android:layout_width="190dp"
                 android:layout_height="65dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="Exit App"
-                android:textColor="@color/colorWhite"
                 android:background="@color/colorPrimaryDark2"
-                android:textSize="18sp"
                 android:drawableStart="@drawable/ic_baseline_exit_to_app_24"
                 android:drawableLeft="@drawable/ic_baseline_exit_to_app_24"
-                android:drawableTint="@color/colorWhite"
                 android:drawablePadding="10dp"
-                android:textStyle="bold"
-                android:paddingLeft="10dp">
+                android:drawableTint="@color/colorWhite"
+                android:paddingLeft="10dp"
+                android:text="Exit App"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold">
 
             </Button>
         </LinearLayout>

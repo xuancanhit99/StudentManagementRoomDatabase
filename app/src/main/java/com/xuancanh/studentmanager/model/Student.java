@@ -13,7 +13,8 @@ public class Student implements Serializable {
     private byte[] stu_avt;
     private String stu_phone;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Student(int stu_id, String stu_name, String stu_no, String stu_email, int stu_gender,
                    String stu_dob, String stu_class, byte[] stu_avt, String stu_phone) {

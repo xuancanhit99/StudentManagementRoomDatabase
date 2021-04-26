@@ -166,17 +166,16 @@ public class AddActivity extends AppCompatActivity {
 
         //Compare imageView with image
         final ImageView imageViewAvt = (ImageView) findViewById(R.id.iv_stu_add_avt);
-        final Bitmap bitmap = ((BitmapDrawable)imageViewAvt.getDrawable()).getBitmap();
+        final Bitmap bitmap = ((BitmapDrawable) imageViewAvt.getDrawable()).getBitmap();
         Drawable myDrawableFemale = getResources().getDrawable(R.drawable.female);
         Drawable myDrawableMale = getResources().getDrawable(R.drawable.male);
         Drawable myDrawableGraduated = getResources().getDrawable(R.drawable.graduated);
         final Bitmap myPhotoDefaultFemale = ((BitmapDrawable) myDrawableFemale).getBitmap();
         final Bitmap myPhotoDefaultMale = ((BitmapDrawable) myDrawableMale).getBitmap();
         final Bitmap myPhotoDefaultGraduated = ((BitmapDrawable) myDrawableGraduated).getBitmap();
-        if(bitmap.sameAs(myPhotoDefaultFemale) || bitmap.sameAs(myPhotoDefaultMale) || bitmap.sameAs(myPhotoDefaultGraduated)) {
+        if (bitmap.sameAs(myPhotoDefaultFemale) || bitmap.sameAs(myPhotoDefaultMale) || bitmap.sameAs(myPhotoDefaultGraduated)) {
             student.setStu_avt(null);
-        }
-        else {
+        } else {
             student.setStu_avt(getByteArrayFromImageView(ivStuAddAvt));
         }
 

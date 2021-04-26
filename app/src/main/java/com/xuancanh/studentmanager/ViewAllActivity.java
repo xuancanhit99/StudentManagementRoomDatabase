@@ -1,6 +1,8 @@
 package com.xuancanh.studentmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +10,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,10 +31,22 @@ public class ViewAllActivity extends AppCompatActivity {
     private RecyclerView rvItems;
     private ArrayList<Student> studentArrayList;
     private StudentAdapter studentAdapter;
+
+    ImageButton ibStuAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
+
+        //Circle Button Add
+        ibStuAdd = findViewById(R.id.ib_stu_add);
+        ibStuAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ViewAllActivity.this, AddActivity.class));
+            }
+        });
 
         addControls();
         readData();
@@ -38,11 +54,19 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private void addControls() {
         studentArrayList = new ArrayList<Student>();
-        rvItems = (RecyclerView)findViewById(R.id.rv_items);
+        rvItems = (RecyclerView) findViewById(R.id.rv_items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(layoutManager);
         rvItems.setHasFixedSize(true);
-        studentAdapter = new StudentAdapter(getApplicationContext(),studentArrayList); // this
+
+
+        //divider for RecycleView(need Class DividerItemDecorator and divider.xml)
+        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(ViewAllActivity.this, R.drawable.divider));
+        rvItems.addItemDecoration(dividerItemDecoration);
+
+
+
+        studentAdapter = new StudentAdapter(getApplicationContext(), studentArrayList); // this
         rvItems.setAdapter(studentAdapter);
     }
 
@@ -51,7 +75,7 @@ public class ViewAllActivity extends AppCompatActivity {
         database = Database.initDatabase(this, DATABASE_NAME);
         Cursor cursor = database.rawQuery("SELECT * FROM students", null);
         studentArrayList.clear();
-        for(int i=0; i<cursor.getCount(); i++) {
+        for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             //colum first = StudentId, second = StudentName... in database
             int s_id = cursor.getInt(0);
