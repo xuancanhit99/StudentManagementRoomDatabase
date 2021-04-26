@@ -1,5 +1,6 @@
 package com.xuancanh.studentmanager;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -30,6 +32,9 @@ import com.xuancanh.studentmanager.model.Student;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +50,9 @@ public class UpdateActivity extends AppCompatActivity {
     private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateDelete, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto;
     private ImageView ivStuUpdateAvt;
     int updateGender;
+
+    //for date of birth
+    final Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,8 @@ public class UpdateActivity extends AppCompatActivity {
         btnStuUpdateExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(UpdateActivity.this, ViewAllActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -148,6 +158,32 @@ public class UpdateActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Set click text view Date of birth
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+        edtStuUpdateDOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(UpdateActivity.this, date, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+
+    //Label for date of birth
+    private void updateLabel() {
+        String myFormat = "MM/dd/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        edtStuUpdateDOB.setText(sdf.format(calendar.getTime()));
     }
 
     private void delete(Student student) {
@@ -215,6 +251,13 @@ public class UpdateActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CHOOSE_PHOTO);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(UpdateActivity.this, ViewAllActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -286,7 +329,7 @@ public class UpdateActivity extends AppCompatActivity {
         SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
         database.update("students", contentValues, "StudentId = ?", new String[]{student.getStu_id() + ""});
 
-        Intent intent = new Intent(this, ViewAllActivity.class);
+        Intent intent = new Intent(UpdateActivity.this, ViewAllActivity.class);
         startActivity(intent);
         finish();
     }

@@ -3,6 +3,7 @@ package com.xuancanh.studentmanager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +17,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -28,6 +30,9 @@ import com.xuancanh.studentmanager.model.Student;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +48,10 @@ public class AddActivity extends AppCompatActivity {
     private Button btnStuAddSave, btnStuAddExit, btnStuAddTakePhoto, btnStuAddChoosePhoto;
     private ImageView ivStuAddAvt;
     int addGender = 1;
+
+    //for date of birth
+    final Calendar calendar = Calendar.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +124,33 @@ public class AddActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        //Set click text view Date of birth
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+        edtStuAddDOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(AddActivity.this, date, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+
+    //Label for date of birth
+    private void updateLabel() {
+        String myFormat = "MM/dd/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        edtStuAddDOB.setText(sdf.format(calendar.getTime()));
     }
 
     private void initUI() {
@@ -215,6 +251,7 @@ public class AddActivity extends AppCompatActivity {
         //After added student move to list
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private boolean isEmptyEditText(EditText editText) {
