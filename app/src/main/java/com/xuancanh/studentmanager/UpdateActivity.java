@@ -47,7 +47,7 @@ public class UpdateActivity extends AppCompatActivity {
     private EditText edtStuUpdateName, edtStuUpdateNo, edtStuUpdateDOB, edtStuUpdatePhone, edtStuUpdateEmail, edtStuUpdateClass;
     private RadioGroup rgStuUpdateGender;
     private RadioButton rbStuUpdateMale, rbStuUpdateFemale;
-    private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateDelete, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto;
+    private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateDelete, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto, btnStuUpdateDelDOB;
     private ImageView ivStuUpdateAvt;
     int updateGender;
 
@@ -147,6 +147,14 @@ public class UpdateActivity extends AppCompatActivity {
             }
         });
 
+        //Button Delete Date of birth
+        btnStuUpdateDelDOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtStuUpdateDOB.setText("");
+            }
+        });
+
         //RadioGroup Gender
         rgStuUpdateGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -239,6 +247,7 @@ public class UpdateActivity extends AppCompatActivity {
         btnStuUpdateDelete = (Button) findViewById(R.id.btn_stu_update_delete);
         btnStuUpdateTakePhoto = (Button) findViewById(R.id.btn_stu_update_take_photo);
         btnStuUpdateChoosePhoto = (Button) findViewById(R.id.btn_stu_update_choose_photo);
+        btnStuUpdateDelDOB = (Button)findViewById(R.id.btn_stu_update_del_dob);
         ivStuUpdateAvt = (ImageView) findViewById(R.id.iv_stu_update_avt);
     }
 
