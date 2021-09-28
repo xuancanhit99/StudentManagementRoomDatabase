@@ -25,9 +25,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.xuancanh.studentmanager.database.Database;
-import com.xuancanh.studentmanager.model.Student;
+import com.xuancanh.studentmanager.Domain.Model.Student;
+import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -39,11 +40,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UpdateActivity extends AppCompatActivity {
-    final String DATABASE_NAME = "stuDB.db";
     final int REQUEST_TAKE_PHOTO = 123;
     final int REQUEST_CHOOSE_PHOTO = 321;
 
-    //Anh xa
+
     private EditText edtStuUpdateName, edtStuUpdateNo, edtStuUpdateDOB, edtStuUpdatePhone, edtStuUpdateEmail, edtStuUpdateClass;
     private RadioGroup rgStuUpdateGender;
     private RadioButton rbStuUpdateMale, rbStuUpdateFemale;
@@ -54,10 +54,14 @@ public class UpdateActivity extends AppCompatActivity {
     //for date of birth
     final Calendar calendar = Calendar.getInstance();
 
+    StudentViewModel studentViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+
+        studentViewModel = new ViewModelProvider(this).get(StudentViewModel.class);
 
         //Get data from key STUDENT_DATA push to student
         Intent intent = getIntent();
@@ -195,8 +199,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     private void delete(Student student) {
-        SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        database.delete("students", "StudentId = ?", new String[]{student.getStu_id() + ""});
+        studentViewModel.deleteStudent(student);
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }
@@ -325,19 +328,8 @@ public class UpdateActivity extends AppCompatActivity {
             student.setStu_avt(getByteArrayFromImageView(ivStuUpdateAvt));
         }
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("StudentName", student.getStu_name());
-        contentValues.put("StudentNo", student.getStu_no());
-        contentValues.put("StudentEmail", student.getStu_email());
-        contentValues.put("StudentGender", student.getStu_gender());
-        contentValues.put("StudentDOB", student.getStu_dob());
-        contentValues.put("StudentClass", student.getStu_class());
-        contentValues.put("StudentAvatar", student.getStu_avt());
-        contentValues.put("StudentPhone", student.getStu_phone());
 
-        SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        database.update("students", contentValues, "StudentId = ?", new String[]{student.getStu_id() + ""});
-
+        studentViewModel.updateStudent(student);
         Intent intent = new Intent(UpdateActivity.this, ViewAllActivity.class);
         startActivity(intent);
         finish();

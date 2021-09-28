@@ -2,42 +2,44 @@ package com.xuancanh.studentmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.xuancanh.studentmanager.adapter.StudentAdapter;
-import com.xuancanh.studentmanager.database.Database;
-import com.xuancanh.studentmanager.model.Student;
+import com.xuancanh.studentmanager.View.Adapters.StudentListAdapter;
+import com.xuancanh.studentmanager.Domain.Model.Student;
+import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewAllActivity extends AppCompatActivity {
 
-    //Database
-    final String DATABASE_NAME = "stuDB.db";
-    SQLiteDatabase database;
+
 
     private RecyclerView rvItems;
-    private ArrayList<Student> studentArrayList;
-    private StudentAdapter studentAdapter;
+    //private List<Student> studentList;
+    private StudentListAdapter studentListAdapter;
 
     ImageButton ibStuAdd;
+    StudentViewModel studentViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
+
+
+        studentViewModel = new ViewModelProvider(this).get(StudentViewModel.class);
 
         //Circle Button Add
         ibStuAdd = findViewById(R.id.ib_stu_add);
@@ -48,12 +50,11 @@ public class ViewAllActivity extends AppCompatActivity {
             }
         });
 
-        addControls();
-        readData();
+        addControlsAndReadData();
     }
 
-    private void addControls() {
-        studentArrayList = new ArrayList<Student>();
+    private void addControlsAndReadData() {
+
         rvItems = (RecyclerView) findViewById(R.id.rv_items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(layoutManager);
@@ -65,30 +66,21 @@ public class ViewAllActivity extends AppCompatActivity {
         rvItems.addItemDecoration(dividerItemDecoration);
 
 
+        studentViewModel.getAllStudents().observe(this, new Observer<List<Student>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChanged(List<Student> students) {
+                if(students != null) {
+                    studentListAdapter = new StudentListAdapter(getApplicationContext(), students);
+                    rvItems.setAdapter(studentListAdapter);
+                }
+                studentListAdapter.notifyDataSetChanged();
+            }
+        });
 
-        studentAdapter = new StudentAdapter(getApplicationContext(), studentArrayList); // this
-        rvItems.setAdapter(studentAdapter);
+        //Fix E/RecyclerView: No adapter attached; skipping layout
+        studentListAdapter = new StudentListAdapter(getApplicationContext(), null); // this
+        rvItems.setAdapter(studentListAdapter);
     }
 
-    private void readData() {
-        //Call check and cre database
-        database = Database.initDatabase(this, DATABASE_NAME);
-        Cursor cursor = database.rawQuery("SELECT * FROM students", null);
-        studentArrayList.clear();
-        for (int i = 0; i < cursor.getCount(); i++) {
-            cursor.moveToPosition(i);
-            //colum first = StudentId, second = StudentName... in database
-            int s_id = cursor.getInt(0);
-            String s_name = cursor.getString(1);
-            String s_no = cursor.getString(2);
-            String s_email = cursor.getString(3);
-            int s_gender = cursor.getInt(4);
-            String s_dob = cursor.getString(5);
-            String s_class = cursor.getString(6);
-            byte[] s_avt = cursor.getBlob(7);
-            String s_phone = cursor.getString(8);
-            studentArrayList.add(new Student(s_id, s_name, s_no, s_email, s_gender, s_dob, s_class, s_avt, s_phone));
-        }
-        studentAdapter.notifyDataSetChanged();
-    }
 }

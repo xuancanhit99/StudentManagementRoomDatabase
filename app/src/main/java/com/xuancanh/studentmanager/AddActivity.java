@@ -2,6 +2,7 @@ package com.xuancanh.studentmanager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
@@ -24,8 +25,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.xuancanh.studentmanager.database.Database;
-import com.xuancanh.studentmanager.model.Student;
+import com.xuancanh.studentmanager.Domain.Model.Student;
+import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -37,11 +38,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AddActivity extends AppCompatActivity {
-    final String DATABASE_NAME = "stuDB.db";
+
     final int REQUEST_TAKE_PHOTO = 123;
     final int REQUEST_CHOOSE_PHOTO = 321;
 
-    //Anh xa
     private EditText edtStuAddName, edtStuAddNo, edtStuAddDOB, edtStuAddPhone, edtStuAddEmail, edtStuAddClass;
     private RadioGroup rgStuAddGender;
     private RadioButton rbStuAddMale, rbStuAddFemale;
@@ -52,6 +52,8 @@ public class AddActivity extends AppCompatActivity {
     //for date of birth
     final Calendar calendar = Calendar.getInstance();
 
+    StudentViewModel studentViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,99 +61,66 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
 
         Student student = new Student();
+        studentViewModel = new ViewModelProvider(this).get(StudentViewModel.class);
 
         //Anh xa
         initUI();
 
         //Button Choose Photo
-        btnStuAddChoosePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choosePhoto();
-            }
-        });
+        btnStuAddChoosePhoto.setOnClickListener(v -> choosePhoto());
 
         //Button Take Photo
-        btnStuAddTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePhoto();
-            }
-        });
+        btnStuAddTakePhoto.setOnClickListener(v -> takePhoto());
 
         //Button Exit from Add
-        btnStuAddExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnStuAddExit.setOnClickListener(v -> finish());
 
         //Button Save
-        btnStuAddSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isEmptyEditText(edtStuAddName) && isEmptyEditText(edtStuAddNo)) {
-                    edtStuAddNo.setError("Please enter student's №");
-                    edtStuAddName.setError("Please enter student's name");
-                }
-                else if(isEmptyEditText(edtStuAddNo)) {
-                    edtStuAddNo.setError("Please enter student's №");
-                }
-                else if(isEmptyEditText(edtStuAddName)) {
-                    edtStuAddName.setError("Please enter student's name");
+        btnStuAddSave.setOnClickListener(v -> {
+            if(isEmptyEditText(edtStuAddName) && isEmptyEditText(edtStuAddNo)) {
+                edtStuAddNo.setError("Please enter student's №");
+                edtStuAddName.setError("Please enter student's name");
+            }
+            else if(isEmptyEditText(edtStuAddNo)) {
+                edtStuAddNo.setError("Please enter student's №");
+            }
+            else if(isEmptyEditText(edtStuAddName)) {
+                edtStuAddName.setError("Please enter student's name");
+            }
+            else {
+                if(isEmailValid(edtStuAddEmail)) {
+                    insert(student);
+                    Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if(isEmailValid(edtStuAddEmail)) {
-                        insert(student);
-                        Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        edtStuAddEmail.setError("Email address not valid");
-                    }
+                    edtStuAddEmail.setError("Email address not valid");
                 }
             }
         });
 
         //Button Delete Date of birth
-        btnStuAddDelDOB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtStuAddDOB.setText("");
-            }
-        });
+        btnStuAddDelDOB.setOnClickListener(v -> edtStuAddDOB.setText(""));
 
         //RadioGroup Gender
-        rgStuAddGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_stu_add_male) {
-                    addGender = 1;
-                } else {
-                    addGender = 0;
-                }
+        rgStuAddGender.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_stu_add_male) {
+                addGender = 1;
+            } else {
+                addGender = 0;
             }
         });
 
 
         //Set click text view Date of birth
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
+        DatePickerDialog.OnDateSetListener date = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
         };
-        edtStuAddDOB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(AddActivity.this, date, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edtStuAddDOB.setOnClickListener(v -> new DatePickerDialog(AddActivity.this, date, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
     }
 
     //Label for date of birth
@@ -244,18 +213,7 @@ public class AddActivity extends AppCompatActivity {
             student.setStu_avt(getByteArrayFromImageView(ivStuAddAvt));
         }
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("StudentName", student.getStu_name());
-        contentValues.put("StudentNo", student.getStu_no());
-        contentValues.put("StudentEmail", student.getStu_email());
-        contentValues.put("StudentGender", student.getStu_gender());
-        contentValues.put("StudentDOB", student.getStu_dob());
-        contentValues.put("StudentClass", student.getStu_class());
-        contentValues.put("StudentAvatar", student.getStu_avt());
-        contentValues.put("StudentPhone", student.getStu_phone());
-
-        SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        database.insert("students", null, contentValues);
+        studentViewModel.insertStudent(student);
 
         //After added student move to list
         Intent intent = new Intent(this, ViewAllActivity.class);

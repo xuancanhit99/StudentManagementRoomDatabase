@@ -1,16 +1,13 @@
-package com.xuancanh.studentmanager.adapter;
+package com.xuancanh.studentmanager.View.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,32 +18,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xuancanh.studentmanager.ItemClickListener;
 import com.xuancanh.studentmanager.R;
 import com.xuancanh.studentmanager.UpdateActivity;
-import com.xuancanh.studentmanager.model.Student;
+import com.xuancanh.studentmanager.Domain.Model.Student;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataViewHolder> {
+public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.StudentViewHolder> {
 
     //Form for adapter
     Context context;
-    ArrayList<Student> list;
+    List<Student> list;
 
-    public StudentAdapter(Context context, ArrayList<Student> list) {
+    public StudentListAdapter(Context context, List<Student> list) {
         this.context = context;
         this.list = list;
     }
 
     @NonNull
     @Override
-    public DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_student, parent, false);
-        ;
-        return new DataViewHolder(itemView);
+        return new StudentViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull DataViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         Student student = list.get(position);
 
         String s_name = student.getStu_name();
@@ -70,17 +66,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataView
         holder.tvStuClass.setText(s_class);
 
         //Click for RecycleView
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int position, boolean isLongClick) {
-                if (isLongClick) {
-                    Toast.makeText(context, "Student: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(view.getContext(), UpdateActivity.class);
-                    intent.putExtra("STUDENT_DATA", student);
-                    view.getContext().startActivity(intent);
-                    ((Activity)view.getContext()).finish();
-                }
+        holder.setItemClickListener((view, position1, isLongClick) -> {
+            if (isLongClick) {
+                Toast.makeText(context, "Student: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(view.getContext(), UpdateActivity.class);
+                intent.putExtra("STUDENT_DATA", student);
+                view.getContext().startActivity(intent);
+                ((Activity)view.getContext()).finish();
             }
         });
     }
@@ -91,7 +84,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataView
     }
 
     //Data ViewHolder class
-    public static class DataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public static class StudentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         ImageView ivStuAvt;
         TextView tvStuName, tvStuClass;
 
@@ -99,7 +92,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataView
 
 
 
-        public DataViewHolder(@NonNull View itemView) {
+        public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvStuName = (TextView) itemView.findViewById(R.id.tv_stu_name);
             tvStuClass = (TextView) itemView.findViewById(R.id.tv_stu_class);
@@ -109,6 +102,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.DataView
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
+
 
         public void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;

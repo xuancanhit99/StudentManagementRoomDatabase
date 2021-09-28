@@ -8,15 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.xuancanh.studentmanager.database.Database;
 
 public class HomeActivity extends AppCompatActivity {
     Button addStudent, viewStudent, exitApp;
 
-    // initviews
-    public void initviews() {
+
+    public void initView() {
         exitApp = findViewById(R.id.btn_app_exit);
         addStudent = findViewById(R.id.btn_student_add);
         viewStudent = findViewById(R.id.btn_student_view_all);
@@ -27,8 +25,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Call initviews
-        initviews();
+        // Call initView
+        initView();
 
         //Exit Button
         exitApp.setOnClickListener(new View.OnClickListener() {
