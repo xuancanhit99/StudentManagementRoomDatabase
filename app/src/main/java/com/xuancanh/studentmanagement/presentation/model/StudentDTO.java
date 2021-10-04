@@ -1,13 +1,14 @@
-package com.xuancanh.studentmanager.Domain.Model;
+package com.xuancanh.studentmanagement.presentation.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
 @Entity(tableName = "student_table")
-public class Student implements Serializable {
+public class StudentDTO implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "stuId")
@@ -37,10 +38,11 @@ public class Student implements Serializable {
     @ColumnInfo(name = "stuPhone")
     private String stu_phone;
 
-    public Student() {
+    public StudentDTO() {
     }
 
-    public Student(String stu_name, String stu_no, String stu_email, int stu_gender, String stu_dob, String stu_class, byte[] stu_avt, String stu_phone) {
+    @Ignore
+    public StudentDTO(String stu_name, String stu_no, String stu_email, int stu_gender, String stu_dob, String stu_class, byte[] stu_avt, String stu_phone) {
         this.stu_name = stu_name;
         this.stu_no = stu_no;
         this.stu_email = stu_email;

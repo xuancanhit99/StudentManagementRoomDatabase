@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager.Presentation;
+package com.xuancanh.studentmanagement.presentation.room;
 
 import android.content.Context;
 
@@ -9,15 +9,15 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 
-import com.xuancanh.studentmanager.Domain.Model.Student;
-import com.xuancanh.studentmanager.Presentation.DAO.StudentDao;
+import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+import com.xuancanh.studentmanagement.presentation.room.dao.StudentDAO;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Student.class}, version = 1, exportSchema = false)
+@Database(entities = {StudentDTO.class}, version = 1, exportSchema = false)
 public abstract class StudentRoomDatabase extends RoomDatabase {
-    public abstract StudentDao studentDao();
+    public abstract StudentDAO studentDao();
     private static volatile StudentRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
@@ -44,11 +44,11 @@ public abstract class StudentRoomDatabase extends RoomDatabase {
 
             databaseWriteExecutor.execute(() -> {
 
-                StudentDao dao = INSTANCE.studentDao();
+                StudentDAO dao = INSTANCE.studentDao();
                 dao.deleteAllStudents();
-                Student student = new Student("NAME", "NO", "EMAIL.COM", 1, "XX-XX-XXXX", "00-XX", null, "AAA-VVVV-CCCC");
+                StudentDTO student = new StudentDTO("NAME", "NO", "EMAIL.COM", 1, "XX-XX-XXXX", "00-XX", null, "AAA-VVVV-CCCC");
                 dao.insertStudent(student);
-                student = new Student("ANONYMOUS", "ON", "HOTMAIL.COM", 0, "OO-OO-OO", "VV-EE", null, "MMM-AAA-CCC");
+                student = new StudentDTO("ANONYMOUS", "ON", "HOTMAIL.COM", 0, "OO-OO-OO", "VV-EE", null, "MMM-AAA-CCC");
                 dao.insertStudent(student);
             });
         }

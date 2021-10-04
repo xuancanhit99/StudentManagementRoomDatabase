@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.tools;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;

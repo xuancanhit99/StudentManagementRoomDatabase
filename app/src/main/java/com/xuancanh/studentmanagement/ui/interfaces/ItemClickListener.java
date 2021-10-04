@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.interfaces;
 
 import android.view.View;
 

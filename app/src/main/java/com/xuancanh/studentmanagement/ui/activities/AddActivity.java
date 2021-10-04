@@ -1,13 +1,11 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,17 +14,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.xuancanh.studentmanager.Domain.Model.Student;
-import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
+import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
+import com.xuancanh.studentmanager.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -60,10 +57,9 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        Student student = new Student();
+        StudentDTO student = new StudentDTO();
         studentViewModel = new ViewModelProvider(this).get(StudentViewModel.class);
 
-        //Anh xa
         initUI();
 
         //Button Choose Photo
@@ -90,7 +86,7 @@ public class AddActivity extends AppCompatActivity {
             else {
                 if(isEmailValid(edtStuAddEmail)) {
                     insert(student);
-                    Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this, "Added StudentDTO " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     edtStuAddEmail.setError("Email address not valid");
@@ -189,7 +185,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     //Insert to database
-    private void insert(Student student) {
+    private void insert(StudentDTO student) {
         student.setStu_name(edtStuAddName.getText().toString());
         student.setStu_no(edtStuAddNo.getText().toString());
         student.setStu_dob(edtStuAddDOB.getText().toString());
@@ -213,6 +209,7 @@ public class AddActivity extends AppCompatActivity {
             student.setStu_avt(getByteArrayFromImageView(ivStuAddAvt));
         }
 
+        //Insert student to database
         studentViewModel.insertStudent(student);
 
         //After added student move to list

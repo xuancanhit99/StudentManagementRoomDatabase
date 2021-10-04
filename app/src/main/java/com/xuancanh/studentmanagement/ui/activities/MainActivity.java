@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+
+import com.xuancanh.studentmanager.R;
 
 public class MainActivity extends AppCompatActivity {
     //Time Splash before run app

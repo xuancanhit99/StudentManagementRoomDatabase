@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,13 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.xuancanh.studentmanager.View.Adapters.StudentListAdapter;
-import com.xuancanh.studentmanager.Domain.Model.Student;
-import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
+import com.xuancanh.studentmanagement.ui.tools.DividerItemDecorator;
+import com.xuancanh.studentmanager.R;
+import com.xuancanh.studentmanagement.ui.view.adapters.StudentListAdapter;
+import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewAllActivity extends AppCompatActivity {
@@ -27,7 +27,7 @@ public class ViewAllActivity extends AppCompatActivity {
 
 
     private RecyclerView rvItems;
-    //private List<Student> studentList;
+    //private List<StudentDTO> studentList;
     private StudentListAdapter studentListAdapter;
 
     ImageButton ibStuAdd;
@@ -54,22 +54,20 @@ public class ViewAllActivity extends AppCompatActivity {
     }
 
     private void addControlsAndReadData() {
-
         rvItems = (RecyclerView) findViewById(R.id.rv_items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(layoutManager);
         rvItems.setHasFixedSize(true);
 
-
         //divider for RecycleView(need Class DividerItemDecorator and divider.xml)
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(ViewAllActivity.this, R.drawable.divider));
         rvItems.addItemDecoration(dividerItemDecoration);
 
-
-        studentViewModel.getAllStudents().observe(this, new Observer<List<Student>>() {
+        //Get data All Students to Adapter
+        studentViewModel.getAllStudents().observe(this, new Observer<List<StudentDTO>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onChanged(List<Student> students) {
+            public void onChanged(List<StudentDTO> students) {
                 if(students != null) {
                     studentListAdapter = new StudentListAdapter(getApplicationContext(), students);
                     rvItems.setAdapter(studentListAdapter);

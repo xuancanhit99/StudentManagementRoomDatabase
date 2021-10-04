@@ -1,10 +1,8 @@
-package com.xuancanh.studentmanager;
+package com.xuancanh.studentmanagement.ui.activities;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,8 +25,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.xuancanh.studentmanager.Domain.Model.Student;
-import com.xuancanh.studentmanager.View.ViewModel.StudentViewModel;
+import com.xuancanh.studentmanager.R;
+import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -65,7 +64,7 @@ public class UpdateActivity extends AppCompatActivity {
 
         //Get data from key STUDENT_DATA push to student
         Intent intent = getIntent();
-        Student student = (Student) intent.getSerializableExtra("STUDENT_DATA");
+        StudentDTO student = (StudentDTO) intent.getSerializableExtra("STUDENT_DATA");
 
         //Anh xa
         initUI();
@@ -132,7 +131,7 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
                 builder.setIcon(R.drawable.ic_baseline_delete_24);
-                builder.setTitle("Delete Student");
+                builder.setTitle("Delete StudentDTO");
                 builder.setMessage("Are you sure delete student " + student.getStu_name() + "?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -198,13 +197,13 @@ public class UpdateActivity extends AppCompatActivity {
         edtStuUpdateDOB.setText(sdf.format(calendar.getTime()));
     }
 
-    private void delete(Student student) {
+    private void delete(StudentDTO student) {
         studentViewModel.deleteStudent(student);
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }
 
-    private void pushDataToView(Student student) {
+    private void pushDataToView(StudentDTO student) {
         edtStuUpdateName.setText(student.getStu_name());
         edtStuUpdateNo.setText(student.getStu_no());
         edtStuUpdateDOB.setText(student.getStu_dob());
@@ -302,7 +301,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     //Update to database
-    private void update(Student student) {
+    private void update(StudentDTO student) {
 
         student.setStu_name(edtStuUpdateName.getText().toString());
         student.setStu_no(edtStuUpdateNo.getText().toString());
@@ -328,8 +327,9 @@ public class UpdateActivity extends AppCompatActivity {
             student.setStu_avt(getByteArrayFromImageView(ivStuUpdateAvt));
         }
 
-
+        //Update student to database
         studentViewModel.updateStudent(student);
+
         Intent intent = new Intent(UpdateActivity.this, ViewAllActivity.class);
         startActivity(intent);
         finish();

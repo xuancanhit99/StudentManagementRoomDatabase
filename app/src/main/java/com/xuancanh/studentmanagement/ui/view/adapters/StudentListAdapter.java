@@ -1,4 +1,4 @@
-package com.xuancanh.studentmanager.View.Adapters;
+package com.xuancanh.studentmanagement.ui.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,10 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.xuancanh.studentmanager.ItemClickListener;
+import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+import com.xuancanh.studentmanagement.ui.activities.UpdateActivity;
+import com.xuancanh.studentmanagement.ui.interfaces.ItemClickListener;
 import com.xuancanh.studentmanager.R;
-import com.xuancanh.studentmanager.UpdateActivity;
-import com.xuancanh.studentmanager.Domain.Model.Student;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
     //Form for adapter
     Context context;
-    List<Student> list;
+    List<StudentDTO> list;
 
-    public StudentListAdapter(Context context, List<Student> list) {
+    public StudentListAdapter(Context context, List<StudentDTO> list) {
         this.context = context;
         this.list = list;
     }
@@ -43,7 +43,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        Student student = list.get(position);
+        StudentDTO student = list.get(position);
 
         String s_name = student.getStu_name();
         String s_class = student.getStu_class();
@@ -68,7 +68,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         //Click for RecycleView
         holder.setItemClickListener((view, position1, isLongClick) -> {
             if (isLongClick) {
-                Toast.makeText(context, "Student: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "StudentDTO: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(view.getContext(), UpdateActivity.class);
                 intent.putExtra("STUDENT_DATA", student);
