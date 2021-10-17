@@ -14,20 +14,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.xuancanh.studentmanagement.domain.model.Student;
 import com.xuancanh.studentmanagement.ui.tools.DividerItemDecorator;
 import com.xuancanh.studentmanager.R;
 import com.xuancanh.studentmanagement.ui.view.adapters.StudentListAdapter;
 import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
 import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ViewAllActivity extends AppCompatActivity {
 
 
-
     private RecyclerView rvItems;
-    //private List<StudentDTO> studentList;
     private StudentListAdapter studentListAdapter;
 
     ImageButton ibStuAdd;
@@ -68,8 +68,14 @@ public class ViewAllActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<StudentDTO> students) {
-                if(students != null) {
-                    studentListAdapter = new StudentListAdapter(getApplicationContext(), students);
+                if (students != null) {
+                    // Data from List(Live data StudentDTO from table sqlite in device) just only read
+                    // Want cover to Student for show data to View(Adapter using Student) then Update
+                    List<Student> studentList = Arrays.asList(new Student[students.size()]);
+                    for (int i = 0; i < students.size(); i++) {
+                        studentList.set(i, StudentDTO.convertFromStudentDTO(students.get(i)));
+                    }
+                    studentListAdapter = new StudentListAdapter(getApplicationContext(), studentList);
                     rvItems.setAdapter(studentListAdapter);
                 }
                 studentListAdapter.notifyDataSetChanged();

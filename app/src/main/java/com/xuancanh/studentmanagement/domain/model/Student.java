@@ -1,6 +1,8 @@
 package com.xuancanh.studentmanagement.domain.model;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
     private int stu_id;
     private String stu_name;
     private String stu_no;
@@ -21,6 +23,10 @@ public class Student {
         this.stu_class = stu_class;
         this.stu_avt = stu_avt;
         this.stu_phone = stu_phone;
+    }
+
+    public Student() {
+
     }
 
     public int getStu_id() {

@@ -15,7 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+
+import com.xuancanh.studentmanagement.domain.model.Student;
 import com.xuancanh.studentmanagement.ui.activities.UpdateActivity;
 import com.xuancanh.studentmanagement.ui.interfaces.ItemClickListener;
 import com.xuancanh.studentmanager.R;
@@ -26,9 +27,9 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
     //Form for adapter
     Context context;
-    List<StudentDTO> list;
+    List<Student> list;
 
-    public StudentListAdapter(Context context, List<StudentDTO> list) {
+    public StudentListAdapter(Context context, List<Student> list) {
         this.context = context;
         this.list = list;
     }
@@ -43,7 +44,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        StudentDTO student = list.get(position);
+        Student student = list.get(position);
 
         String s_name = student.getStu_name();
         String s_class = student.getStu_class();
@@ -68,7 +69,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         //Click for RecycleView
         holder.setItemClickListener((view, position1, isLongClick) -> {
             if (isLongClick) {
-                Toast.makeText(context, "StudentDTO: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Student: " + student.getStu_name(), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(view.getContext(), UpdateActivity.class);
                 intent.putExtra("STUDENT_DATA", student);
@@ -94,9 +95,9 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvStuName = (TextView) itemView.findViewById(R.id.tv_stu_name);
-            tvStuClass = (TextView) itemView.findViewById(R.id.tv_stu_class);
-            ivStuAvt = (ImageView) itemView.findViewById(R.id.iv_stu_avt);
+            tvStuName = itemView.findViewById(R.id.tv_stu_name);
+            tvStuClass = itemView.findViewById(R.id.tv_stu_class);
+            ivStuAvt = itemView.findViewById(R.id.iv_stu_avt);
 
             //Turn On Click for RecycleView
             itemView.setOnClickListener(this);

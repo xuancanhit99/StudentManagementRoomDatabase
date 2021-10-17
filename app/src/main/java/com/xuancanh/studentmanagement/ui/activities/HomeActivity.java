@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Add StudentDTO Button
+        //Add Student Button
         addStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

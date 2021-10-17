@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.xuancanh.studentmanagement.domain.model.Student;
 import com.xuancanh.studentmanagement.presentation.room.StudentRepository;
 import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
 
@@ -23,15 +24,15 @@ public class StudentViewModel extends AndroidViewModel {
         return mAllStudents;
     }
 
-    public void insertStudent(StudentDTO student) {
+    public void insertStudent(Student student) {
         mStudentRepository.insertStudent(student);
     }
 
-    public void updateStudent(StudentDTO student) {
+    public void updateStudent(Student student) {
         mStudentRepository.updateStudent(student);
     }
 
-    public void deleteStudent(StudentDTO student) {
+    public void deleteStudent(Student student) {
         mStudentRepository.deleteStudent(student);
     }
 }

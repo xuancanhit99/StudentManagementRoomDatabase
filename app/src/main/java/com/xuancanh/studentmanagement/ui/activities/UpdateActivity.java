@@ -25,8 +25,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.xuancanh.studentmanagement.domain.model.Student;
 import com.xuancanh.studentmanager.R;
-import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+
 import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 
 import java.io.ByteArrayOutputStream;
@@ -64,7 +65,7 @@ public class UpdateActivity extends AppCompatActivity {
 
         //Get data from key STUDENT_DATA push to student
         Intent intent = getIntent();
-        StudentDTO student = (StudentDTO) intent.getSerializableExtra("STUDENT_DATA");
+        Student student = (Student) intent.getSerializableExtra("STUDENT_DATA");
 
         //Anh xa
         initUI();
@@ -131,7 +132,7 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
                 builder.setIcon(R.drawable.ic_baseline_delete_24);
-                builder.setTitle("Delete StudentDTO");
+                builder.setTitle("Delete Student");
                 builder.setMessage("Are you sure delete student " + student.getStu_name() + "?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -197,13 +198,13 @@ public class UpdateActivity extends AppCompatActivity {
         edtStuUpdateDOB.setText(sdf.format(calendar.getTime()));
     }
 
-    private void delete(StudentDTO student) {
+    private void delete(Student student) {
         studentViewModel.deleteStudent(student);
         Intent intent = new Intent(this, ViewAllActivity.class);
         startActivity(intent);
     }
 
-    private void pushDataToView(StudentDTO student) {
+    private void pushDataToView(Student student) {
         edtStuUpdateName.setText(student.getStu_name());
         edtStuUpdateNo.setText(student.getStu_no());
         edtStuUpdateDOB.setText(student.getStu_dob());
@@ -301,7 +302,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     //Update to database
-    private void update(StudentDTO student) {
+    private void update(Student student) {
 
         student.setStu_name(edtStuUpdateName.getText().toString());
         student.setStu_no(edtStuUpdateNo.getText().toString());

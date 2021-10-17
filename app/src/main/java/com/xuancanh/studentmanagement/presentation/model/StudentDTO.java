@@ -5,10 +5,12 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.xuancanh.studentmanagement.domain.model.Student;
+
 import java.io.Serializable;
 
 @Entity(tableName = "student_table")
-public class StudentDTO implements Serializable {
+public class StudentDTO extends Student implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "stuId")
@@ -123,5 +125,33 @@ public class StudentDTO implements Serializable {
 
     public void setStu_phone(String stu_phone) {
         this.stu_phone = stu_phone;
+    }
+
+    public static StudentDTO convertFromStudent(Student student) {
+        StudentDTO dto = new StudentDTO();
+        dto.setStu_id(student.getStu_id());
+        dto.setStu_phone(student.getStu_phone());
+        dto.setStu_avt(student.getStu_avt());
+        dto.setStu_class(student.getStu_class());
+        dto.setStu_dob(student.getStu_dob());
+        dto.setStu_gender(student.getStu_gender());
+        dto.setStu_no(student.getStu_no());
+        dto.setStu_email(student.getStu_email());
+        dto.setStu_name(student.getStu_name());
+        return dto;
+    }
+
+    public static Student convertFromStudentDTO(StudentDTO student) {
+        Student stu = new Student();
+        stu.setStu_id(student.getStu_id());
+        stu.setStu_phone(student.getStu_phone());
+        stu.setStu_avt(student.getStu_avt());
+        stu.setStu_class(student.getStu_class());
+        stu.setStu_dob(student.getStu_dob());
+        stu.setStu_gender(student.getStu_gender());
+        stu.setStu_no(student.getStu_no());
+        stu.setStu_email(student.getStu_email());
+        stu.setStu_name(student.getStu_name());
+        return stu;
     }
 }

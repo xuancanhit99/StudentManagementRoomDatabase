@@ -21,7 +21,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.xuancanh.studentmanagement.presentation.model.StudentDTO;
+
+import com.xuancanh.studentmanagement.domain.model.Student;
 import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 import com.xuancanh.studentmanager.R;
 
@@ -57,7 +58,7 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        StudentDTO student = new StudentDTO();
+        Student student = new Student();
         studentViewModel = new ViewModelProvider(this).get(StudentViewModel.class);
 
         initUI();
@@ -86,7 +87,7 @@ public class AddActivity extends AppCompatActivity {
             else {
                 if(isEmailValid(edtStuAddEmail)) {
                     insert(student);
-                    Toast.makeText(AddActivity.this, "Added StudentDTO " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this, "Added Student " + student.getStu_name() + " Successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     edtStuAddEmail.setError("Email address not valid");
@@ -185,7 +186,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     //Insert to database
-    private void insert(StudentDTO student) {
+    private void insert(Student student) {
         student.setStu_name(edtStuAddName.getText().toString());
         student.setStu_no(edtStuAddNo.getText().toString());
         student.setStu_dob(edtStuAddDOB.getText().toString());
