@@ -1,8 +1,10 @@
 package com.xuancanh.studentmanagement.ui.activities;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,7 +34,9 @@ import com.xuancanh.studentmanagement.ui.view.viewmodel.StudentViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -50,6 +54,9 @@ public class UpdateActivity extends AppCompatActivity {
     private Button btnStuUpdateSave, btnStuUpdateExit, btnStuUpdateDelete, btnStuUpdateTakePhoto, btnStuUpdateChoosePhoto, btnStuUpdateDelDOB;
     private ImageView ivStuUpdateAvt;
     int updateGender;
+
+    String realPath = "";
+    Uri imageUri;
 
     //for date of birth
     final Calendar calendar = Calendar.getInstance();
@@ -277,8 +284,9 @@ public class UpdateActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CHOOSE_PHOTO) {
+                imageUri = data.getData();
+                realPath = getRealPathFromURI(imageUri);
                 try {
-                    Uri imageUri = data.getData();
                     InputStream is = getContentResolver().openInputStream(imageUri);
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     ivStuUpdateAvt.setImageBitmap(bitmap);
@@ -288,6 +296,8 @@ public class UpdateActivity extends AppCompatActivity {
             } else if (requestCode == REQUEST_TAKE_PHOTO) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 ivStuUpdateAvt.setImageBitmap(bitmap);
+                saveToGallery();
+                realPath = getRealPathFromURI(imageUri);
             }
         }
     }
@@ -300,6 +310,41 @@ public class UpdateActivity extends AppCompatActivity {
         byte[] byteArray = stream.toByteArray();
         return byteArray;
     }
+
+
+    // Get Real Path when upload photo(from uri - image/mame_image)
+    public String getRealPathFromURI(Uri contentUri) {
+        String path = null;
+        String[] proj = {MediaStore.MediaColumns.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            path = cursor.getString(column_index);
+        }
+        cursor.close();
+        return path;
+    }
+
+    private void saveToGallery() {
+        Bitmap bitmap = ((BitmapDrawable) ivStuUpdateAvt.getDrawable()).getBitmap();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Image From Take Photo");
+        values.put(MediaStore.Images.Media.BUCKET_ID, "image");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "take photo and save to gallery");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        OutputStream outstream;
+        try {
+            outstream = getContentResolver().openOutputStream(imageUri);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
+            outstream.close();
+            //Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     //Update to database
     private void update(Student student) {
